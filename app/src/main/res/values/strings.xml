@@ -9,4 +9,14 @@
 
     <string name="recipe_title_3">Beef Stroganoff</string>
     <string name="recipe_description_3">A creamy dish with sauteed pieces of beef and mushrooms.</string>
+
+    <string name="recipe_title_4">4 - Spaghetti Bolognese</string>
+    <string name="recipe_description_4">4 - A classic Italian dish with rich meant sauce.</string>
+
+    <string name="recipe_title_5">5 - Chicken Curry</string>
+    <string name="recipe_description_5">5 - A spicy and savory curry with tender chicken pieces.</string>
+
+    <string name="recipe_title_6">6 - Beef Stroganoff</string>
+    <string name="recipe_description_6">6 - A creamy dish with sauteed pieces of beef and mushrooms.</string>
+
 </resources>

@@ -22,32 +22,9 @@ import com.example.recipeexplorer.R
 fun RecipeExplorerApp(
 
 ) {
-    RecipeItem("hello")
+    RecipeListScreen()
 }
 
-@Composable
-fun RecipeItem(
-    recipe: String,
-    modifier: Modifier = Modifier
-) {
-    val mediumPadding = dimensionResource(R.dimen.padding_medium)
-    Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
-    ) {
-        Column() {
-            Text(
-                text = "Spaghetti Bolognese",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(mediumPadding)
-            )
-            Text(
-                text = stringResource(R.string.recipe_description_1),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = modifier
-            )
-        }
-    }
-}
+
 
 
