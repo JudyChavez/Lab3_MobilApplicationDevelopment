@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">RecipeExplorer</string>
 
+
+    <string name="recipe_list_screen_top_app_bar">Recipe List</string>
+    <string name="recipe_detail_screen_top_app_bar">Recipe Detail...</string>
+
+
+
     <string name="recipe_title_1">Spaghetti Bolognese</string>
     <string name="recipe_description_1">A classic Italian dish with rich meant sauce.</string>
 
