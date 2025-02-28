@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">RecipeExplorer</string>
+
+    <string name="recipe_title_1">Spaghetti Bolognese</string>
+    <string name="recipe_description_1">A classic Italian dish with rich meant sauce.</string>
+
+    <string name="recipe_title_2">Chicken Curry</string>
+    <string name="recipe_description_2">A spicy and savory curry with tender chicken pieces.</string>
+
+    <string name="recipe_title_3">Beef Stroganoff</string>
+    <string name="recipe_description_3">A creamy dish with sauteed pieces of beef and mushrooms.</string>
 </resources>
