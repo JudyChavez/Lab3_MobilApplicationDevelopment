@@ -12,22 +12,20 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.recipeexplorer.R
+import com.example.recipeexplorer.data.Datasource
 
 
-/**
- * Composable that displays an app bar and a list of recipes
- */
+
 
 //RecipeExplorerApp() – Entry point that sets up adaptive layouts.
 
 
-//RecipeApp() contains a LazyColumn that displays the RecipeItems.
 @Composable
 fun RecipeExplorerApp(
     modifier: Modifier = Modifier
 ) {
-
     RecipeListScreen()
+    //RecipeDetailScreen(4)
 
 }
 

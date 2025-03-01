@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
  */
 data class Recipe(
     //stringResourceId represents an ID for the recipe text stored in a string resource.
+    @StringRes val id: Int,
     @StringRes val title: Int,
     @StringRes val description: Int,
 )

@@ -5,8 +5,6 @@
     <string name="recipe_list_screen_top_app_bar">Recipe List</string>
     <string name="recipe_detail_screen_top_app_bar">Recipe Detail...</string>
 
-
-
     <string name="recipe_title_1">Spaghetti Bolognese</string>
     <string name="recipe_description_1">A classic Italian dish with rich meant sauce.</string>
 
@@ -16,13 +14,26 @@
     <string name="recipe_title_3">Beef Stroganoff</string>
     <string name="recipe_description_3">A creamy dish with sauteed pieces of beef and mushrooms.</string>
 
+
     <string name="recipe_title_4">4 - Spaghetti Bolognese</string>
     <string name="recipe_description_4">4 - A classic Italian dish with rich meant sauce.</string>
-
     <string name="recipe_title_5">5 - Chicken Curry</string>
     <string name="recipe_description_5">5 - A spicy and savory curry with tender chicken pieces.</string>
-
     <string name="recipe_title_6">6 - Beef Stroganoff</string>
     <string name="recipe_description_6">6 - A creamy dish with sauteed pieces of beef and mushrooms.</string>
+
+    <string name="recipe_title_7">7 - Spaghetti Bolognese</string>
+    <string name="recipe_description_7">7 - A classic Italian dish with rich meant sauce.</string>
+    <string name="recipe_title_8">8 - Chicken Curry</string>
+    <string name="recipe_description_8">8 - A spicy and savory curry with tender chicken pieces.</string>
+    <string name="recipe_title_9">9 - Beef Stroganoff</string>
+    <string name="recipe_description_9">9 - A creamy dish with sauteed pieces of beef and mushrooms.</string>
+
+    <string name="recipe_title_10">10 - Spaghetti Bolognese</string>
+    <string name="recipe_description_10">10 - A classic Italian dish with rich meant sauce.</string>
+    <string name="recipe_title_11">11 - Chicken Curry</string>
+    <string name="recipe_description_11">11 - A spicy and savory curry with tender chicken pieces.</string>
+    <string name="recipe_title_12">12 - Beef Stroganoff</string>
+    <string name="recipe_description_12">12 - A creamy dish with sauteed pieces of beef and mushrooms.</string>
 
 </resources>

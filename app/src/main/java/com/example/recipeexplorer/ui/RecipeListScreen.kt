@@ -78,7 +78,7 @@ fun RecipeCard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeExplorerTopAppBar(modifier: Modifier = Modifier) {
+fun RecipeListScreenTopAppBar(modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar( //had to add to build.gradle.kts(Module :app): freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
         title = {
             Row(
@@ -100,15 +100,15 @@ fun RecipeExplorerTopAppBar(modifier: Modifier = Modifier) {
 fun RecipeList(recipeList: List<Recipe>, modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
-            RecipeExplorerTopAppBar()
+            RecipeListScreenTopAppBar()
         }
     ) { it ->
         LazyColumn(contentPadding = it) {
             //items() method is how you add items to the LazyColumn.
             //for each recipe in the list, call the RecipeCard() composable.
-            items(recipeList) { recipe ->
+            items(recipeList) { it -> //{ recipe ->
                 RecipeCard(
-                    recipe = recipe,
+                    recipe = it, //recipe
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
                 )
             }
@@ -116,20 +116,8 @@ fun RecipeList(recipeList: List<Recipe>, modifier: Modifier = Modifier) {
     }
 }
 
-////adds each recipe card to a LazyColumn for display.
-//@Composable
-//fun RecipeList(recipeList: List<Recipe>, modifier: Modifier = Modifier) {
-//    LazyColumn(modifier = modifier) {
-//        //items() method is how you add items to the LazyColumn.
-//        //for each recipe in the list, call the RecipeCard() composable.
-//        items(recipeList) { recipe ->
-//            RecipeCard(
-//                recipe = recipe,
-//                modifier = Modifier.padding(8.dp)
-//            )
-//        }
-//    }
-//}
+
+
 
 
 
