@@ -24,8 +24,8 @@ import com.example.recipeexplorer.data.Datasource
 fun RecipeExplorerApp(
     modifier: Modifier = Modifier
 ) {
-    RecipeListScreen()
-    //RecipeDetailScreen(4)
+   // RecipeListScreen()
+    RecipeDetailScreen(5)
 
 }
 

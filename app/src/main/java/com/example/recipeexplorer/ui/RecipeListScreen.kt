@@ -75,6 +75,11 @@ fun RecipeCard(
     }
 }
 
+//enum class to define the routes.
+enum class RecicpeScreen() {
+    Title,
+    Description
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
