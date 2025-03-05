@@ -11,21 +11,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.example.recipeexplorer.R
 import com.example.recipeexplorer.data.Datasource
 
 
 
 
+
+
+
+
 //RecipeExplorerApp() – Entry point that sets up adaptive layouts.
-
-
 @Composable
 fun RecipeExplorerApp(
-    modifier: Modifier = Modifier
+    //modifier: Modifier = Modifier
 ) {
-   // RecipeListScreen()
-    RecipeDetailScreen(5)
+    Navigation()
+    //RecipeListScreen()
+    //RecipeDetailScreen(recipeId = 4)
 
 }
 

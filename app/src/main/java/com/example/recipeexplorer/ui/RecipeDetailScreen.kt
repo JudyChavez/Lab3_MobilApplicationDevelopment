@@ -14,12 +14,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.recipeexplorer.R
 import com.example.recipeexplorer.data.Datasource
 import com.example.recipeexplorer.model.Recipe
@@ -32,7 +38,7 @@ import com.example.recipeexplorer.model.Recipe
 @Composable
 fun RecipeDetailScreenTopAppBar(topBarTitle: String, modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar( //had to add to build.gradle.kts(Module :app): freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
-        title = {
+        title = { //lambda function parameter that defines the content of the top app bar.
             Row(
                 verticalAlignment = Alignment.CenterVertically //makes RecipeExplorerTopAppBar content center vertically.
             ) {
@@ -49,10 +55,17 @@ fun RecipeDetailScreenTopAppBar(topBarTitle: String, modifier: Modifier = Modifi
 @Composable
 fun RecipeDetailScreen(
     @StringRes recipeId: Int, //Get recipe ID as a parameter.
+//    recipeViewModel: RecipeViewModel = viewModel(),
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    // Sample data for the recipe (you can replace this with actual data based on recipeId)
+    // Observe the UI state to get the recipe based on the ID
+//    val recipeUiState by recipeViewModel.uiState.collectAsState()
+
+    // find recipe with given recipeId
     val recipe = Datasource().loadRecipes().find { it.id == recipeId }
+//    val recipe = recipeUiState.recipes.find { it.id == recipeId }
+    //val recipe = recipeViewModel.uiState.value.recipes.find { it.id == recipeId }
 
     //structure layout
     Scaffold(
@@ -60,6 +73,7 @@ fun RecipeDetailScreen(
             if (recipe != null) {
                 RecipeDetailScreenTopAppBar(
                     topBarTitle = LocalContext.current.getString(recipe.title)  //stringResource(id = R.string.recipe_detail_screen_top_app_bar)
+//                    topBarTitle = stringResource(id = recipe.title)
                 )
             }
         },
@@ -80,21 +94,21 @@ fun RecipeDetailScreen(
     )
 }
 
-    //each individual recipe card, it contains: title and description
-    @Composable
-    fun RecipeDetailCard(
-        recipe: Recipe,
-        modifier: Modifier = Modifier
-    ) {
-        // Display recipe details in a card
-        Card(modifier = modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
-                //Recipe description
-                Text(
-                    text = LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+//each individual recipe card, it contains: title and description
+@Composable
+fun RecipeDetailCard(
+    recipe: Recipe,
+    modifier: Modifier = Modifier
+) {
+    // Display recipe details in a card
+    Card(modifier = modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
+            //Recipe description
+            Text(
+                text = LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
+}
 
