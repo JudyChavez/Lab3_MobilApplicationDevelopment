@@ -42,6 +42,8 @@ import androidx.navigation.navArgument
 import com.example.recipeexplorer.R
 import com.example.recipeexplorer.data.Datasource
 import com.example.recipeexplorer.model.Recipe
+import com.example.recipeexplorer.ui.utils.RecipeExplorerContentType
+import com.example.recipeexplorer.ui.utils.RecipeExplorerNavigationType
 
 
 //RecipeListScreen() – Displays the list of recipes.
@@ -50,6 +52,9 @@ import com.example.recipeexplorer.model.Recipe
 @Composable
 fun RecipeListScreen(
     navController: NavHostController, //we add this since this screens contains the card that will navigate to the RecipeDetailScreen.
+    navigationType: RecipeExplorerNavigationType,
+    contentType: RecipeExplorerContentType,
+    recipeUiState: RecipeUiState,
     modifier: Modifier = Modifier
 ) {
     //call the RecipeList composable, and pass DataSource().loadRecipes() to the recipeList parameter.
@@ -123,7 +128,12 @@ fun RecipeListScreenTopAppBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Navigation() {
+fun Navigation(
+    navigationType: RecipeExplorerNavigationType,
+    contentType: RecipeExplorerContentType,
+    recipeUiState: RecipeUiState,
+    modifier: Modifier = Modifier
+) {
     //we use navController to control our navHost
     // we can get that by rememberNavController.
     //We can use that to navigate where we want, pass arguments if we and others.
@@ -138,7 +148,13 @@ fun Navigation() {
     ) {
         composable(route = Screen.RecipeList.name
         ) {
-            RecipeListScreen(navController = navController)
+            RecipeListScreen(
+                navController = navController,
+                navigationType = navigationType,
+                contentType = contentType,
+                recipeUiState = recipeUiState,
+                modifier = modifier
+            )
         }
         composable(route = "recipe_detail/{recipeId}") { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0

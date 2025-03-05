@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -22,6 +25,7 @@ import com.example.recipeexplorer.ui.RecipeExplorerApp
 import com.example.recipeexplorer.ui.theme.RecipeExplorerTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,7 +45,10 @@ class MainActivity : ComponentActivity() {
                                 .calculateEndPadding(layoutDirection)
                         )
                 ) {
-                    RecipeExplorerApp()
+                    val windowSize = calculateWindowSizeClass(this) //calculates the size of windowSize
+                    RecipeExplorerApp(
+                        windowSize = windowSize.widthSizeClass //only the width of windowSize, type: WindowWidthSizeClass
+                    )
                 }
             }
         }
@@ -52,8 +59,30 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun RecipeExplorerAppCompactPreview() {
     RecipeExplorerTheme {
-        RecipeExplorerApp()
+        RecipeExplorerApp(
+            windowSize = WindowWidthSizeClass.Compact
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 700)
+@Composable
+fun RecipeExplorerAppMediumPreview() {
+    RecipeExplorerTheme {
+        RecipeExplorerApp(
+            windowSize = WindowWidthSizeClass.Medium
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 1000)
+@Composable
+fun RecipeExplorerAppExpandedPreview() {
+    RecipeExplorerTheme {
+        RecipeExplorerApp(
+            windowSize = WindowWidthSizeClass.Expanded
+        )
     }
 }
