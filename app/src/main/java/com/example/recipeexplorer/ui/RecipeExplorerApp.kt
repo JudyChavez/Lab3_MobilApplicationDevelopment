@@ -1,7 +1,11 @@
 package com.example.recipeexplorer.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
+
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -16,6 +20,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,8 +39,8 @@ fun RecipeExplorerApp(
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: RecipeViewModel = viewModel()
-    val recipeUiState = viewModel.uiState.collectAsState().value
+    val viewModel: RecipeViewModel = viewModel() //declares viewModel
+    val recipeUiState = viewModel.uiState.collectAsState().value //declares uiState
 
 
     val navigationType: RecipeExplorerNavigationType
@@ -69,38 +74,69 @@ fun RecipeExplorerApp(
 
     if (
         windowSize == WindowWidthSizeClass.Medium || windowSize == WindowWidthSizeClass.Expanded
-        ) {
-        Row(modifier = modifier.fillMaxSize()) {
-            //Navigation Host
-            NavHost(
-                navController = navController,
-                startDestination = "recipeList",
-                modifier = Modifier.weight(1f)
-            ) {
-                //define RecipeListScreen() route
-                composable("recipeList") {
-                    RecipeListScreen(
-                        navController = navController,
-                        navigationType = navigationType,
-                        contentType = contentType,
-                        recipeUiState = recipeUiState,
-                        modifier = Modifier.fillMaxSize()
-                    )
+        )  {
+
+        Box(modifier = modifier) {
+            Row(modifier = modifier.fillMaxSize()) {
+                //Navigation Host
+                NavHost(
+                    navController = navController,
+                    startDestination = "recipeList",
+                    modifier = Modifier.weight(1f).fillMaxHeight()
+                ) {
+                    //define RecipeListScreen() route
+                    composable(
+                        route = Screen.RecipeList.name/*"recipeList"*/
+                    ) {
+                        RecipeListScreen(
+                            navController = navController,
+                            navigationType = navigationType,
+                            contentType = contentType,
+                            recipeUiState = recipeUiState,
+                            modifier = modifier
+                        )
+                    }
                 }
-                //define RecipeDetailScreen() route with an argument for recipeId
-                composable(
-                    "recipeDetail/{recipeId}",
-                    arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
-                ) { backStackEntry ->
-                    val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: 0
-                    RecipeDetailScreen(
-                        recipeId = recipeId,
-                        navController = navController,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                NavHost(
+                    navController = navController,
+                    startDestination = "recipe_detail/{recipeId}",
+                    modifier = Modifier.weight(1f).fillMaxHeight()
+                ) {
+                    //define RecipeDetailScreen() route with an argument for recipeId
+                    composable(
+                        //"recipeDetail/{recipeId}",
+                        route = "recipe_detail/{recipeId}",
+                        //arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
+                        RecipeDetailScreen(
+                            recipeId = recipeId,
+                            navController = navController,
+                            modifier = modifier
+                        )
+                    }
                 }
             }
         }
+
+//        Row() {
+//            RecipeListScreen(
+//                navController = navController,
+//                navigationType = navigationType,
+//                contentType = contentType,
+//                recipeUiState = recipeUiState,
+//                modifier = Modifier.weight(1f)
+//            )
+//            RecipeDetailScreen(
+//                recipeId = 0,
+//                navController = navController,
+//                modifier = Modifier.weight(1f)
+//            )
+//
+//        }
+
+
+
     } else {
         Navigation(
             navigationType = navigationType,
@@ -110,19 +146,6 @@ fun RecipeExplorerApp(
         )
     }
 }
-
-//            RecipeListScreen(
-//                navController = navController,
-//                navigationType = navigationType,
-//                contentType = contentType,
-//                recipeUiState = recipeUiState,
-//                modifier = Modifier)
-//            RecipeDetailScreen(
-//                recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0,
-//                recipeId = "3",
-//                navController = navController,
-//                modifier = modifier
-//            )
 
 
 

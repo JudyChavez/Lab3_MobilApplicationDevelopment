@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -75,6 +76,10 @@ fun RecipeDetailScreen(
                     topBarTitle = LocalContext.current.getString(recipe.title)  //stringResource(id = R.string.recipe_detail_screen_top_app_bar)
 //                    topBarTitle = stringResource(id = recipe.title)
                 )
+            } else {
+                RecipeDetailScreenTopAppBar(
+                    topBarTitle = "Recipe Detail"
+                )
             }
         },
         content = { paddingValues ->
@@ -87,6 +92,17 @@ fun RecipeDetailScreen(
                 // Show the recipe detail card
                 recipe?.let {   //next line only executes if recipe is not null, otherwise it's skipped. Shorter than using an if statement.
                     RecipeDetailCard(recipe = it)
+                }
+                if (recipe == null) {
+                    RecipeDetailCard(
+                        recipe =
+                            Recipe(
+                                id = 0,
+                                title = stringResource(R.string.recipe_title_null).toInt(),
+                                description = stringResource(R.string.recipe_description_null).toInt()
+                            )
+                    )
+                    //Text(text = "Select a recipe!")
                 }
 
             }

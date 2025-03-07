@@ -5,8 +5,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
+
+
 import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipeexplorer.R
@@ -47,6 +54,19 @@ import com.example.recipeexplorer.ui.utils.RecipeExplorerNavigationType
 
 
 //RecipeListScreen() – Displays the list of recipes.
+
+
+//enum class to define the routes. //Holds constants for the screen.
+//The @StringRes annotation indicates that the title parameter is an integer resource ID that points to a string resource.
+//The @StringRes annotation is used to specify that the title property should hold
+// a reference to a string resource ID (an integer),
+// which can later be used to retrieve a string from the strings.xml file in the Android project.
+enum class Screen(@StringRes val title: Int) {
+    //Each constant represents a different screen in the app.
+    RecipeList(title = R.string.recipe_list_screen_top_app_bar), //"Recipe List"
+    RecipeDetail(title = R.string.recipe_detail_screen_top_app_bar) //"Recipe Detail..."
+}
+
 
 
 @Composable
@@ -132,59 +152,102 @@ fun Navigation(
     navigationType: RecipeExplorerNavigationType,
     contentType: RecipeExplorerContentType,
     recipeUiState: RecipeUiState,
+
     modifier: Modifier = Modifier
 ) {
+
     //we use navController to control our navHost
     // we can get that by rememberNavController.
     //We can use that to navigate where we want, pass arguments if we and others.
     val navController = rememberNavController() //Initialize the NavController
 
+
+
     //NavHost() composable needs the navController
     //NavHost takes a navController to listen to changes and commands from the navController.
     //It also takes a startDestination.
-    NavHost(
-        navController = navController,
-        startDestination = Screen.RecipeList.name   /*"recipe_list_screen"*/,
-    ) {
-        composable(route = Screen.RecipeList.name
-        ) {
-            RecipeListScreen(
-                navController = navController,
-                navigationType = navigationType,
-                contentType = contentType,
-                recipeUiState = recipeUiState,
-                modifier = modifier
-            )
+    if (contentType == RecipeExplorerContentType.LIST_AND_DETAIL) {
+        Box() {
+            Row(modifier = Modifier.fillMaxWidth()) {
+            //LazyColumn(modifier = Modifier.weight(1f)) {
+                RecipeListScreen(
+                    navController = navController,
+                    navigationType = navigationType,
+                    contentType = contentType,
+                    recipeUiState = recipeUiState,
+                    modifier = modifier.weight(1f)
+                )
+                    RecipeDetailScreen(
+                        recipeId = 0,
+                        navController = navController,
+                        modifier = modifier.weight(1f)
+                    )
+            }//}
         }
-        composable(route = "recipe_detail/{recipeId}") { backStackEntry ->
-            val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
-            RecipeDetailScreen(recipeId = recipeId, navController = navController)
+    } else {
+        NavHost(
+            navController = navController,
+            startDestination = Screen.RecipeList.name,   /*"recipe_list_screen"*/
+            modifier = modifier
+        ) {
+            composable(route = Screen.RecipeList.name
+            ) {
+                RecipeListScreen(
+                    navController = navController,
+                    navigationType = navigationType,
+                    contentType = contentType,
+                    recipeUiState = recipeUiState,
+                    modifier = modifier.fillMaxSize()
+                )
+            }
+            composable(route = "recipe_detail/{recipeId}") { backStackEntry ->
+                val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
+                RecipeDetailScreen(
+                    recipeId = recipeId,
+                    navController = navController,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }
 
 
+
+
+//    //NavHost() composable needs the navController
+//    //NavHost takes a navController to listen to changes and commands from the navController.
+//    //It also takes a startDestination.
+//    NavHost(
+//        navController = navController,
+//        startDestination = Screen.RecipeList.name,   /*"recipe_list_screen"*/
+//        modifier = modifier
 //    ) {
-//        composable(route = Screen.RecipeList.name /*"recipe_list_screen"*/) {
-//            RecipeListScreen(navController = navController) //Navigate to the RecipeListScreen
+//        composable(route = Screen.RecipeList.name
+//        ) {
+//            RecipeListScreen(
+//                navController = navController,
+//                navigationType = navigationType,
+//                contentType = contentType,
+//                recipeUiState = recipeUiState,
+//                modifier = modifier.fillMaxSize()
+//            )
 //        }
-//        composable(route = Screen.RecipeDetail.name /*"detail_screen"*/) { backStackEntry ->
-//            val context = LocalContext.current
-//
-//            // Get the recipeId argument from the navigation route
-//            val recipeId = backStackEntry.arguments?.getInt("recipeId")?.toInt() ?: 0
-//            // Navigate to RecipeDetailScreen and pass the recipeId
-//            RecipeDetailScreen(recipeId = recipeId, navController = navController)
+//        composable(route = "recipe_detail/{recipeId}") { backStackEntry ->
+//            val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
+//            RecipeDetailScreen(
+//                recipeId = recipeId,
+//                navController = navController,
+//                modifier = Modifier.fillMaxSize()
+//                )
 //        }
 //    }
 //}
 
 
-//enum class to define the routes.
-enum class Screen(@StringRes val title: Int) {
-    RecipeList(title = R.string.recipe_list_screen_top_app_bar), //"Recipe List"
-    RecipeDetail(title = R.string.recipe_detail_screen_top_app_bar) //"Recipe Detail..."
-}
+
+
+
 
 
 

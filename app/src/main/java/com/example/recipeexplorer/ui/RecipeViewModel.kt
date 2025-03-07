@@ -37,8 +37,6 @@ class RecipeViewModel : ViewModel() {
     // The private setter ensures that the UI can read the selection but cannot modify it directly from outside the ViewModel.
     var userSelection by mutableStateOf("")
         private set
-
-
 }
 
 //// ViewModel for Recipe UI

@@ -67,7 +67,7 @@ fun RecipeExplorerAppCompactPreview() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 700)
+@Preview(showBackground = true, widthDp = 600)
 @Composable
 fun RecipeExplorerAppMediumPreview() {
     RecipeExplorerTheme {
