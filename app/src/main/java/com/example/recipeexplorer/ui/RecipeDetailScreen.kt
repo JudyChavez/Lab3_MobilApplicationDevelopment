@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -56,8 +57,10 @@ fun RecipeDetailScreenTopAppBar(topBarTitle: String, modifier: Modifier = Modifi
 @Composable
 fun RecipeDetailScreen(
     @StringRes recipeId: Int, //Get recipe ID as a parameter.
-//    recipeViewModel: RecipeViewModel = viewModel(),
+    recipeViewModel: RecipeViewModel, // = viewModel(),
     navController: NavHostController,
+    recipeUiState: RecipeUiState,
+    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
     // Observe the UI state to get the recipe based on the ID
@@ -91,7 +94,7 @@ fun RecipeDetailScreen(
             ) {
                 // Show the recipe detail card
                 recipe?.let {   //next line only executes if recipe is not null, otherwise it's skipped. Shorter than using an if statement.
-                    RecipeDetailCard(recipe = it)
+                    RecipeDetailCard(recipe = it, recipeUiState = recipeUiState)
                 }
                 if (recipe == null) {
                     RecipeDetailCard(
@@ -100,9 +103,10 @@ fun RecipeDetailScreen(
                                 id = 0,
                                 title = stringResource(R.string.recipe_title_null).toInt(),
                                 description = stringResource(R.string.recipe_description_null).toInt()
-                            )
+                            ),
+                        recipeUiState = recipeUiState,
                     )
-                    //Text(text = "Select a recipe!")
+                    Text(text = "Select a recipe!")
                 }
 
             }
@@ -114,6 +118,7 @@ fun RecipeDetailScreen(
 @Composable
 fun RecipeDetailCard(
     recipe: Recipe,
+    recipeUiState: RecipeUiState,
     modifier: Modifier = Modifier
 ) {
     // Display recipe details in a card

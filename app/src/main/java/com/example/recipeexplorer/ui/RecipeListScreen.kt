@@ -3,29 +3,25 @@ package com.example.recipeexplorer.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 
 
 import androidx.compose.foundation.layout.Row
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,12 +34,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipeexplorer.R
@@ -69,29 +65,71 @@ enum class Screen(@StringRes val title: Int) {
 
 
 
+//@Composable
+//fun RecipeListScreen(
+//    navController: NavHostController, //we add this since this screens contains the card that will navigate to the RecipeDetailScreen.
+//    navigationType: RecipeExplorerNavigationType,
+//    contentType: RecipeExplorerContentType,
+//    recipeUiState: RecipeUiState,
+//    modifier: Modifier = Modifier
+//) {
+//    //call the RecipeList composable, and pass DataSource().loadRecipes() to the recipeList parameter.
+//    val recipeList = Datasource().loadRecipes()
+//
+//    Scaffold(
+//        topBar = {
+//            RecipeListScreenTopAppBar()
+//        }
+//    ) { it -> //it is paddingValues { it ->
+//        LazyColumn(contentPadding = it) {
+//            //items() method is how you add items to the LazyColumn.
+//            //for each recipe in the list, call the RecipeCard() composable.
+//            items(recipeList) { it -> //{ it is recipe
+//                RecipeCard(
+//                    navController = navController,
+//                    recipe = it, //recipe
+//                    modifier = Modifier
+//                        .padding(dimensionResource(R.dimen.padding_medium))
+//                        .clickable {
+//                            // Navigate to the RecipeDetailScreen and pass the recipeId
+//                            navController.navigate("recipe_detail/${it.id}") //it is recipe
+//                        }
+//                )
+//            }
+//        }
+//    }
+//}
+
+/////////////////////////////////////////start testing//////////////////////////////////////////////
 @Composable
 fun RecipeListScreen(
     navController: NavHostController, //we add this since this screens contains the card that will navigate to the RecipeDetailScreen.
     navigationType: RecipeExplorerNavigationType,
     contentType: RecipeExplorerContentType,
     recipeUiState: RecipeUiState,
+    recipeViewModel: RecipeViewModel = viewModel(),
+    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
+    //val uiState by recipeViewModel.uiState.collectAsState() //observe UI state, declared in RecipeExplorerApp.kt
+
+
     //call the RecipeList composable, and pass DataSource().loadRecipes() to the recipeList parameter.
     val recipeList = Datasource().loadRecipes()
-
+    /*val selectedRecipe = recipeViewModel.selectedRecipe*/
     Scaffold(
         topBar = {
             RecipeListScreenTopAppBar()
         }
-    ) { it -> //it is paddingValues
+    ) { it -> //"it" is paddingValues { paddingValues ->
         LazyColumn(contentPadding = it) {
             //items() method is how you add items to the LazyColumn.
             //for each recipe in the list, call the RecipeCard() composable.
-            items(recipeList) { it -> //{ it is recipe
+            items(/*recipeUiState.recipes*/recipeList) { it -> //{ it is recipe { recipe ->
                 RecipeCard(
                     navController = navController,
                     recipe = it, //recipe
+                    recipeUiState = recipeUiState,
                     modifier = Modifier
                         .padding(dimensionResource(R.dimen.padding_medium))
                         .clickable {
@@ -104,11 +142,107 @@ fun RecipeListScreen(
     }
 }
 
+
+@Composable
+fun RecipeListAndDetail(
+    navController: NavHostController, //we add this since this screens contains the card that will navigate to the RecipeDetailScreen.
+    navigationType: RecipeExplorerNavigationType,
+    contentType: RecipeExplorerContentType,
+    recipeUiState: RecipeUiState,
+    recipeViewModel: RecipeViewModel,
+    windowSize: WindowWidthSizeClass,
+    modifier: Modifier = Modifier
+){
+    val recipeList = Datasource().loadRecipes()
+    //val selectedRecipe = recipeViewModel.selectedRecipe
+
+    val recipeId = 0//backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
+    // find recipe with given recipeId
+    val recipe = Datasource().loadRecipes().find { it.id == recipeId }
+
+    // State to keep track of the selected recipe
+    var selectedRecipe by remember { mutableStateOf<Recipe?>(null) }
+
+
+    Row(
+        modifier = Modifier,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            RecipeListScreenTopAppBar()
+            LazyColumn(
+                contentPadding = WindowInsets.statusBars.asPaddingValues(),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
+            ) {
+                //items() method is how you add items to the LazyColumn.
+                //for each recipe in the list, call the RecipeCard() composable.
+                items(recipeUiState.recipes/*recipeList*/) { it -> //{ it is recipe on the list
+                    RecipeCard(
+                        navController = navController,
+                        recipe = it, //recipe
+                        recipeUiState = recipeUiState,
+                        modifier = Modifier
+                            .padding(dimensionResource(R.dimen.padding_medium))
+                            .clickable {
+                                //When recipe card is clicked, update selectedRecipe in the ViewModel
+                                recipeViewModel.selectedRecipe(it)
+                                // Navigate to the RecipeDetailScreen and pass the recipeId
+                                //navController.navigate("recipe_detail/${it.id}") //it is recipe
+                            }
+                    )
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(
+                    horizontal = dimensionResource(R.dimen.padding_medium),
+                    vertical = dimensionResource(R.dimen.padding_medium)
+                ),
+            verticalArrangement = Arrangement.Center
+        ) {
+            val selectedRecipe =
+                recipeViewModel.selectedRecipe//selectedRecipe declared in RecipeViewModel.kt
+            selectedRecipe?.let { recipe ->
+                RecipeDetailScreen(
+                    recipeId = selectedRecipe.id, //recipeId, //Get recipe ID as a parameter.
+                    recipeViewModel = recipeViewModel,
+                    navController = navController,
+                    recipeUiState = recipeUiState,
+                    windowSize = windowSize,
+                    modifier = modifier
+                )
+            } ?: run {
+                //Text("Select a recipe!")
+                RecipeDetailScreen(
+                    recipeId = 0, //recipeId, //Get recipe ID as a parameter.
+                    recipeViewModel = recipeViewModel,
+                    navController = navController,
+                    recipeUiState = recipeUiState,
+                    windowSize = windowSize,
+                    modifier = modifier
+                )
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////End testing//////////////////////////////////
+
+
+
+
 //each individual recipe card, it contains: title and description
 @Composable
 fun RecipeCard(
     navController: NavController,
     recipe: Recipe,
+    recipeUiState: RecipeUiState,
     modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier.fillMaxWidth()) {
@@ -152,7 +286,8 @@ fun Navigation(
     navigationType: RecipeExplorerNavigationType,
     contentType: RecipeExplorerContentType,
     recipeUiState: RecipeUiState,
-
+    recipeViewModel: RecipeViewModel,
+    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
 
@@ -162,55 +297,58 @@ fun Navigation(
     val navController = rememberNavController() //Initialize the NavController
 
 
-
     //NavHost() composable needs the navController
     //NavHost takes a navController to listen to changes and commands from the navController.
     //It also takes a startDestination.
     if (contentType == RecipeExplorerContentType.LIST_AND_DETAIL) {
-        Box() {
-            Row(modifier = Modifier.fillMaxWidth()) {
-            //LazyColumn(modifier = Modifier.weight(1f)) {
-                RecipeListScreen(
+        RecipeListAndDetail(
                     navController = navController,
                     navigationType = navigationType,
                     contentType = contentType,
                     recipeUiState = recipeUiState,
-                    modifier = modifier.weight(1f)
-                )
-                    RecipeDetailScreen(
-                        recipeId = 0,
-                        navController = navController,
-                        modifier = modifier.weight(1f)
-                    )
-            }//}
-        }
-    } else {
+                    recipeViewModel = recipeViewModel,
+                    windowSize = windowSize,
+                    modifier = modifier//.weight(1f).fillMaxHeight()
+        )
+
+
+    } else {        //for Compact screens, Uses Navigation.
         NavHost(
             navController = navController,
             startDestination = Screen.RecipeList.name,   /*"recipe_list_screen"*/
             modifier = modifier
         ) {
-            composable(route = Screen.RecipeList.name
-            ) {
+            composable(route = Screen.RecipeList.name) {
+                val context = LocalContext.current
                 RecipeListScreen(
                     navController = navController,
                     navigationType = navigationType,
                     contentType = contentType,
                     recipeUiState = recipeUiState,
-                    modifier = modifier.fillMaxSize()
+                    recipeViewModel = viewModel(),
+                    windowSize = windowSize,
+                    modifier = modifier//.fillMaxSize()
                 )
             }
-            composable(route = "recipe_detail/{recipeId}") { backStackEntry ->
+            composable(
+                route = "recipe_detail/{recipeId}",
+                arguments = listOf(navArgument("recipeId") { type = NavType.StringType})
+            ) { backStackEntry ->
                 val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
                 RecipeDetailScreen(
                     recipeId = recipeId,
                     navController = navController,
-                    modifier = Modifier.fillMaxSize()
+                    recipeViewModel = recipeViewModel,
+                    recipeUiState = recipeUiState,
+                    windowSize = windowSize,
+                    modifier = modifier
                 )
             }
         }
     }
 }
+
+
 
 
 

@@ -9,6 +9,7 @@ class Datasource() {
     var recipeIdCounter = 0 //initialize id counter when loading recipes.
 
     //loadRecipes() method gathers all of the data provided and returns it as a list.
+    //uses R.String resource IDs.
     fun loadRecipes(): List<Recipe> {
         return listOf<Recipe>(
             Recipe(recipeIdCounter++, R.string.recipe_title_null, R.string.recipe_description_null),

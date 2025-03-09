@@ -58,6 +58,17 @@ dependencies {
 
     implementation("androidx.compose.material3:material3-window-size-class") //implements WindowSizeClass API
 
+
+
+    implementation ("androidx.compose.runtime:runtime-livedata")
+    implementation ("androidx.compose.runtime:runtime")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx")
+
+
+
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

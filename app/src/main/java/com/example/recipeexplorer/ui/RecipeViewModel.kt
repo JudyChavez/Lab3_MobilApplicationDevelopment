@@ -12,50 +12,44 @@ import kotlinx.coroutines.flow.asStateFlow
 
 
 //RecipeViewModel class will manage the state of the UI by holding and updating the RecipeUiState through the _uiState variable.
+//manages state of recipes list and selectedRecipe.
 class RecipeViewModel : ViewModel() {
 
-    //Recipe UI state
+    //Recipe UI state, holds state of recipe list
     private val _uiState = // RecipeUiState() is a data class in RecipeUiState.kt.
         MutableStateFlow(RecipeUiState()) //Backing property to uiState to avoid state updates from other classes
-
     val uiState: StateFlow<RecipeUiState> = //asStateFlow() converts MutableStateFlow to a StateFlow.
         _uiState.asStateFlow() // Expose as immutable StateFlow. asStateFlow() makes this mutable state flow a read-only state flow.
 
+
+    //The selected recipe
+    private val _selectedRecipe =
+        mutableStateOf<Recipe?>(null)
+    val selectedRecipe: Recipe? get() = _selectedRecipe.value
+
+
     init {
-        loadRecipes() //load recipes
+        initializeUiState() //load recipes
     }
 
-    private fun loadRecipes() {
+    //load recipes list
+    private fun initializeUiState() {
         _uiState.value = _uiState.value.copy(
-            recipes = Datasource().loadRecipes() //update recipes UI state
+            recipes = Datasource().loadRecipes() //update list of recipes UI state //returns a listOf<Recipe>
         )
+    }
+
+    //updates selectedRecipe when clicked
+    fun selectedRecipe(recipe: Recipe?) {
+        _selectedRecipe.value = recipe
     }
 
     //Use mutableStateOf() so that Compose observes this value and sets the initial value to "".
     //Compose observes this value and sets the initial value to "".
     //This will be an observable state that Compose will track for changes.
     // The private setter ensures that the UI can read the selection but cannot modify it directly from outside the ViewModel.
-    var userSelection by mutableStateOf("")
-        private set
+//    var selectedRecipes by mutableStateOf("")
+//        private set
 }
 
-//// ViewModel for Recipe UI
-//class RecipeViewModel : ViewModel() {
-//
-//    // Backing property for the UI state (mutable)
-//    private val _uiState = MutableStateFlow(RecipeUiState()) // Initially an empty list of recipes
-//    val uiState: StateFlow<RecipeUiState> = _uiState.asStateFlow() // Exposed as read-only StateFlow
-//
-//    private val datasource = Datasource()
-//
-//    // Function to load recipes from Datasource and update the state
-//    fun loadRecipes() {
-//        // Get the recipes from the Datasource (could be static or dynamic)
-//        val recipes: List<Recipe> = datasource.loadRecipes()
-//
-//        // Update the state with the recipes
-//        _uiState.value = RecipeUiState(
-//            recipes = recipes // Set the recipes in the state
-//        )
-//    }
 //}
