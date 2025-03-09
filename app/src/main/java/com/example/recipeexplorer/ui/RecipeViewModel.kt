@@ -4,11 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+
 import com.example.recipeexplorer.data.Datasource
 import com.example.recipeexplorer.model.Recipe
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 
 //RecipeViewModel class will manage the state of the UI by holding and updating the RecipeUiState through the _uiState variable.
@@ -22,9 +24,8 @@ class RecipeViewModel : ViewModel() {
         _uiState.asStateFlow() // Expose as immutable StateFlow. asStateFlow() makes this mutable state flow a read-only state flow.
 
 
-    //The selected recipe
-    private val _selectedRecipe =
-        mutableStateOf<Recipe?>(null)
+    //Holds the currently selected recipe
+    private val _selectedRecipe = mutableStateOf<Recipe?>(null)
     val selectedRecipe: Recipe? get() = _selectedRecipe.value
 
 
@@ -32,15 +33,24 @@ class RecipeViewModel : ViewModel() {
         initializeUiState() //load recipes
     }
 
-    //load recipes list
+    //load recipes list from Datasource
     private fun initializeUiState() {
         _uiState.value = _uiState.value.copy(
             recipes = Datasource().loadRecipes() //update list of recipes UI state //returns a listOf<Recipe>
         )
     }
 
-    //updates selectedRecipe when clicked
-    fun selectedRecipe(recipe: Recipe?) {
+    // Update the selected recipe and reflect the change in the UI state.
+    fun updateCurrentRecipeDetailScreenState(recipe: Recipe) {
+        _uiState.update {
+            it.copy(
+                selectedRecipe = recipe //updates the selected recipe
+            )
+        }
+    }
+
+    //updates selected recipe when clicked
+    fun selectRecipe(recipe: Recipe?) {
         _selectedRecipe.value = recipe
     }
 

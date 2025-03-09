@@ -64,6 +64,8 @@ dependencies {
     implementation ("androidx.compose.runtime:runtime")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx")
+    implementation(libs.androidx.media3.datasource)
+    implementation(libs.androidx.paging.common.android)
 
 
 

@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -107,15 +108,15 @@ fun RecipeListScreen(
     navigationType: RecipeExplorerNavigationType,
     contentType: RecipeExplorerContentType,
     recipeUiState: RecipeUiState,
-    recipeViewModel: RecipeViewModel = viewModel(),
+    recipeViewModel: RecipeViewModel, // = viewModel(),
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
-    //val uiState by recipeViewModel.uiState.collectAsState() //observe UI state, declared in RecipeExplorerApp.kt
+    val recipeUiState by recipeViewModel.uiState.collectAsState() //observe UI state, declared in RecipeExplorerApp.kt
 
 
     //call the RecipeList composable, and pass DataSource().loadRecipes() to the recipeList parameter.
-    val recipeList = Datasource().loadRecipes()
+    /*val recipeList = Datasource().loadRecipes()*/
     /*val selectedRecipe = recipeViewModel.selectedRecipe*/
     Scaffold(
         topBar = {
@@ -125,7 +126,7 @@ fun RecipeListScreen(
         LazyColumn(contentPadding = it) {
             //items() method is how you add items to the LazyColumn.
             //for each recipe in the list, call the RecipeCard() composable.
-            items(/*recipeUiState.recipes*/recipeList) { it -> //{ it is recipe { recipe ->
+            items(recipeUiState.recipes/*recipeList*/) { it -> //{ it is recipe { recipe ->
                 RecipeCard(
                     navController = navController,
                     recipe = it, //recipe
@@ -133,6 +134,8 @@ fun RecipeListScreen(
                     modifier = Modifier
                         .padding(dimensionResource(R.dimen.padding_medium))
                         .clickable {
+                            //update selected recipe in ViewModel
+                            recipeViewModel.selectRecipe(it)
                             // Navigate to the RecipeDetailScreen and pass the recipeId
                             navController.navigate("recipe_detail/${it.id}") //it is recipe
                         }
@@ -188,7 +191,7 @@ fun RecipeListAndDetail(
                             .padding(dimensionResource(R.dimen.padding_medium))
                             .clickable {
                                 //When recipe card is clicked, update selectedRecipe in the ViewModel
-                                recipeViewModel.selectedRecipe(it)
+                                recipeViewModel.selectRecipe(it)
                                 // Navigate to the RecipeDetailScreen and pass the recipeId
                                 //navController.navigate("recipe_detail/${it.id}") //it is recipe
                             }
@@ -240,7 +243,7 @@ fun RecipeListAndDetail(
 //each individual recipe card, it contains: title and description
 @Composable
 fun RecipeCard(
-    navController: NavController,
+    navController: NavHostController,
     recipe: Recipe,
     recipeUiState: RecipeUiState,
     modifier: Modifier = Modifier
@@ -288,13 +291,14 @@ fun Navigation(
     recipeUiState: RecipeUiState,
     recipeViewModel: RecipeViewModel,
     windowSize: WindowWidthSizeClass,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
 
     //we use navController to control our navHost
     // we can get that by rememberNavController.
     //We can use that to navigate where we want, pass arguments if we and others.
-    val navController = rememberNavController() //Initialize the NavController
+//    val navController = rememberNavController() //Initialize the NavController
 
 
     //NavHost() composable needs the navController
@@ -318,14 +322,16 @@ fun Navigation(
             startDestination = Screen.RecipeList.name,   /*"recipe_list_screen"*/
             modifier = modifier
         ) {
-            composable(route = Screen.RecipeList.name) {
-                val context = LocalContext.current
+            composable(
+                route = Screen.RecipeList.name
+            ) {
+                //val context = LocalContext.current
                 RecipeListScreen(
                     navController = navController,
                     navigationType = navigationType,
                     contentType = contentType,
                     recipeUiState = recipeUiState,
-                    recipeViewModel = viewModel(),
+                    recipeViewModel = recipeViewModel,//viewModel(),
                     windowSize = windowSize,
                     modifier = modifier//.fillMaxSize()
                 )

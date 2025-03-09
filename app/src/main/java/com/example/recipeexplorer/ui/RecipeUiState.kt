@@ -10,10 +10,12 @@ import com.example.recipeexplorer.model.Recipe
 data class RecipeUiState(
 //    val recipeTitle: String = "",
 //    val recipeDescription: String = "",
+    //val recipeList: List<Recipe>,
 
-    val recipes: List<Recipe> = emptyList() // Default to an empty list
+    val recipes: List<Recipe> = emptyList(), // Default to an empty list
+    val selectedRecipe: Recipe? = null
 ) {
-
+   // val recipesList = recipeList
 }
 
 ////holds the state for the UI.

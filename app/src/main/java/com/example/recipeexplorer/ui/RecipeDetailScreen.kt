@@ -67,16 +67,33 @@ fun RecipeDetailScreen(
 //    val recipeUiState by recipeViewModel.uiState.collectAsState()
 
     // find recipe with given recipeId
-    val recipe = Datasource().loadRecipes().find { it.id == recipeId }
+    /*val recipe = Datasource().loadRecipes().find { it.id == recipeId }*/
 //    val recipe = recipeUiState.recipes.find { it.id == recipeId }
     //val recipe = recipeViewModel.uiState.value.recipes.find { it.id == recipeId }
+
+    //Observe the selected recipe from ViewModel
+    val selectedRecipe = recipeViewModel.selectedRecipe
+
+    // Ensure the state is available even after recomposition
+    if (selectedRecipe == null) {
+        // Update the selected recipe state if it's null
+        val recipe = Datasource().loadRecipes().find { it.id == recipeId }
+        recipe?.let {
+            recipeViewModel.selectRecipe(it) // Update the selected recipe state in ViewModel
+        }
+    }
+
+
+
+
+    /*val recipe = recipeViewModel.uiState.collectAsState().value.recipes.find {it.id == recipeId }*/
 
     //structure layout
     Scaffold(
         topBar = {
-            if (recipe != null) {
+            if (/*recipe*/selectedRecipe != null) {
                 RecipeDetailScreenTopAppBar(
-                    topBarTitle = LocalContext.current.getString(recipe.title)  //stringResource(id = R.string.recipe_detail_screen_top_app_bar)
+                    topBarTitle = stringResource(id = /*recipe*/selectedRecipe.title)//LocalContext.current.getString(recipe.title)  //stringResource(id = R.string.recipe_detail_screen_top_app_bar)
 //                    topBarTitle = stringResource(id = recipe.title)
                 )
             } else {
@@ -93,10 +110,10 @@ fun RecipeDetailScreen(
                     .padding(dimensionResource(R.dimen.padding_medium)) //additional padding for content.
             ) {
                 // Show the recipe detail card
-                recipe?.let {   //next line only executes if recipe is not null, otherwise it's skipped. Shorter than using an if statement.
+                /*recipe*/selectedRecipe?.let {   //next line only executes if recipe is not null, otherwise it's skipped. Shorter than using an if statement.
                     RecipeDetailCard(recipe = it, recipeUiState = recipeUiState)
                 }
-                if (recipe == null) {
+                if (/*recipe*/selectedRecipe == null) {
                     RecipeDetailCard(
                         recipe =
                             Recipe(
@@ -106,7 +123,7 @@ fun RecipeDetailScreen(
                             ),
                         recipeUiState = recipeUiState,
                     )
-                    Text(text = "Select a recipe!")
+                    //Text(text = "Select a recipe!!!")
                 }
 
             }
@@ -125,10 +142,10 @@ fun RecipeDetailCard(
     Card(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
             //Recipe description
-            Text(
-                text = LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
-                style = MaterialTheme.typography.bodyLarge
-            )
+              Text(
+                   text = stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+                   style = MaterialTheme.typography.bodyLarge
+              )
         }
     }
 }

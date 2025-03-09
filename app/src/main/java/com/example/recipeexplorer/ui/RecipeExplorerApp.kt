@@ -41,8 +41,8 @@ fun RecipeExplorerApp(
     windowSize: WindowWidthSizeClass, // enum class WindowWidthSizeClass { Compact, Medium, Expanded }
     modifier: Modifier = Modifier
 ) {
-    val recipeViewModel: RecipeViewModel = viewModel() //declares viewModel
-    val recipeUiState = recipeViewModel.uiState.collectAsState().value //declares uiState
+    val recipeViewModel: RecipeViewModel = viewModel() //declares viewModel, holds UI state for the recipe list.
+    val recipeUiState = recipeViewModel.uiState.collectAsState().value //declares uiState, is observed using .collectAsState()
 
 
     val navigationType: RecipeExplorerNavigationType    //located in WindowStateUtils.kt
@@ -71,8 +71,8 @@ fun RecipeExplorerApp(
     }
 
 
-//    //Create a NavController for navigation
-//    val navController = rememberNavController() //initialize NavController
+    //Create a NavController for navigation
+    val navController = rememberNavController() //initialize NavController, handles the app's navigation logic.
 //
 //
 //    //Create ViewModel instance
@@ -89,14 +89,15 @@ fun RecipeExplorerApp(
 //        )
 //    } else {
 //        // For compact window sizes, handle navigation differently (you can add bottom navigation or another type here)
-        Navigation(
-            navigationType = navigationType,
-            contentType = contentType,
-            recipeUiState = recipeUiState,
-            recipeViewModel = recipeViewModel,
-            windowSize = windowSize,
-            modifier = modifier
-        )
+    Navigation(
+        navigationType = navigationType,
+        contentType = contentType,
+        recipeUiState = recipeUiState,
+        recipeViewModel = recipeViewModel,
+        windowSize = windowSize,
+        navController = navController, //pass the NavController to Navigation
+        modifier = modifier
+    )
 //    }
 }
 
