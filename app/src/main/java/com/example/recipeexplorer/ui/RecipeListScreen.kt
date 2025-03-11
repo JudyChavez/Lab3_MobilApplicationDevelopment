@@ -273,6 +273,10 @@ fun RecipeListAndDetail(
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
 
+
+
+
+
         //NavHost() composable needs the navController
         //NavHost takes a navController to listen to changes and commands from the navController.
         if (contentType == RecipeExplorerContentType.LIST_AND_DETAIL) {
@@ -296,9 +300,24 @@ fun RecipeListAndDetail(
 //            Screen.RecipeList.name
 //        }
 
+
+//            // Dynamically determine the start destination based on the selected recipe
+//            var startDestination = if (selectedRecipe != null) {
+//                "${Screen.RecipeDetail.name}/{recipeId}"
+//            } else {
+//                Screen.RecipeList.name
+//            }
+            // Set the starting destination to RecipeDetailScreen, with a default recipeId (e.g., 0)
+            val startDestination = if (selectedRecipe == null) {
+                // Use the recipeId of the selected recipe as the starting destination
+                Screen.RecipeList.name
+            } else {
+                // Default to the first recipe's ID if no recipe is selected, or use 0 if no recipes are available
+                "${Screen.RecipeDetail.name}/${selectedRecipe.id}"
+            }
             NavHost(
                 navController = navController,
-                startDestination = /*startDestination,*/Screen.RecipeList.name,
+                startDestination = startDestination,///*startDestination,*/Screen.RecipeList.name,
                 modifier = modifier
             ) {
                 composable(
@@ -320,6 +339,7 @@ fun RecipeListAndDetail(
                     arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
+
                     RecipeDetailScreen(
                         recipeId = recipeId,
                         navController = navController,

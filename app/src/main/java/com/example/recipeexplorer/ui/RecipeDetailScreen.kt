@@ -1,5 +1,6 @@
 package com.example.recipeexplorer.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -76,6 +77,22 @@ fun RecipeDetailScreen(
     }
 
     val recipe = recipeViewModel.uiState.collectAsState().value.recipes.find {it.id == 0/*recipeId*/ }
+
+    // Handle the back button press
+    BackHandler {
+        // Check if there is a screen to go back to
+        if (navController.previousBackStackEntry != null) {
+            // Clear selected recipe before popping the back stack
+            recipeViewModel.selectRecipe(null)
+            // There is a screen to pop back to
+            navController.popBackStack()
+        } else {
+            // Clear selected recipe before navigating to RecipeList
+            //recipeViewModel.selectRecipe(null)
+            // Navigate to the RecipeList screen
+            navController.navigate(Screen.RecipeList.name)
+        }
+    }
 
     //structure layout
     Scaffold(
