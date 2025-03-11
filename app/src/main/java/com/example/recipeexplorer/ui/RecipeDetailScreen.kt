@@ -56,37 +56,26 @@ fun RecipeDetailScreenTopAppBar(topBarTitle: String, modifier: Modifier = Modifi
 
 @Composable
 fun RecipeDetailScreen(
-    @StringRes recipeId: Int, //Get recipe ID as a parameter.
+    @StringRes recipeId: Int?, //Get recipe ID as a parameter.
     recipeViewModel: RecipeViewModel, // = viewModel(),
     navController: NavHostController,
     recipeUiState: RecipeUiState,
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
-    // Observe the UI state to get the recipe based on the ID
-//    val recipeUiState by recipeViewModel.uiState.collectAsState()
-
-    // find recipe with given recipeId
-    /*val recipe = Datasource().loadRecipes().find { it.id == recipeId }*/
-//    val recipe = recipeUiState.recipes.find { it.id == recipeId }
-    //val recipe = recipeViewModel.uiState.value.recipes.find { it.id == recipeId }
-
     //Observe the selected recipe from ViewModel
     val selectedRecipe = recipeViewModel.selectedRecipe
 
     // Ensure the state is available even after recomposition
     if (selectedRecipe == null) {
         // Update the selected recipe state if it's null
-        val recipe = Datasource().loadRecipes().find { it.id == recipeId }
+        val recipe = /*null*/Datasource().loadRecipes().find { it.id == recipeId }
         recipe?.let {
-            recipeViewModel.selectRecipe(it) // Update the selected recipe state in ViewModel
+            recipeViewModel.selectRecipe(/*null*/it) // Update the selected recipe state in ViewModel
         }
     }
 
-
-
-
-    /*val recipe = recipeViewModel.uiState.collectAsState().value.recipes.find {it.id == recipeId }*/
+    val recipe = recipeViewModel.uiState.collectAsState().value.recipes.find {it.id == 0/*recipeId*/ }
 
     //structure layout
     Scaffold(
@@ -115,7 +104,7 @@ fun RecipeDetailScreen(
                 }
                 if (/*recipe*/selectedRecipe == null) {
                     RecipeDetailCard(
-                        recipe =
+                        recipe = //null,
                             Recipe(
                                 id = 0,
                                 title = stringResource(R.string.recipe_title_null).toInt(),
@@ -125,7 +114,6 @@ fun RecipeDetailScreen(
                     )
                     //Text(text = "Select a recipe!!!")
                 }
-
             }
         }
     )

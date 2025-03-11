@@ -24,9 +24,7 @@ class RecipeViewModel : ViewModel() {
         _uiState.asStateFlow() // Expose as immutable StateFlow. asStateFlow() makes this mutable state flow a read-only state flow.
 
 
-    //Holds the currently selected recipe
-    private val _selectedRecipe = mutableStateOf<Recipe?>(null)
-    val selectedRecipe: Recipe? get() = _selectedRecipe.value
+
 
 
     init {
@@ -36,9 +34,16 @@ class RecipeViewModel : ViewModel() {
     //load recipes list from Datasource
     private fun initializeUiState() {
         _uiState.value = _uiState.value.copy(
-            recipes = Datasource().loadRecipes() //update list of recipes UI state //returns a listOf<Recipe>
+            recipes = Datasource().loadRecipes(), //update list of recipes UI state //returns a listOf<Recipe>
+            selectedRecipe = null
         )
     }
+
+    //Holds the currently selected recipe
+    private val _selectedRecipe = mutableStateOf<Recipe?>(null)
+    val selectedRecipe: Recipe? get() = _selectedRecipe.value
+
+
 
     // Update the selected recipe and reflect the change in the UI state.
     fun updateCurrentRecipeDetailScreenState(recipe: Recipe) {

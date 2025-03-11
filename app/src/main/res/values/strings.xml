@@ -3,7 +3,7 @@
 
 
     <string name="recipe_list_screen_top_app_bar">Recipe List</string>
-    <string name="recipe_detail_screen_top_app_bar">Recipe Detail...</string>
+    <string name="recipe_detail_screen_top_app_bar">Recipe Detail</string>
 
 
     <string name="recipe_title_null">Recipe Detail</string>
