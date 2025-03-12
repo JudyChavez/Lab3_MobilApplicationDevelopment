@@ -78,10 +78,11 @@ fun RecipeListScreen(
             RecipeListScreenTopAppBar()
         }
     ) { it -> //"it" is paddingValues { paddingValues ->
+        val displayList = recipeUiState.recipes.drop(1)
         LazyColumn(contentPadding = it) {
             //items() method is how you add items to the LazyColumn.
             //for each recipe in the list, call the RecipeCard() composable.
-            items(recipeUiState.recipes/*recipeList*/) { it -> //{ it is recipe { recipe ->
+            items(/*recipeUiState.recipes/*recipeList*/*/displayList) { it -> //{ it is recipe { recipe ->
                 RecipeCard(
                     navController = navController,
                     recipe = it, //recipe
@@ -94,7 +95,7 @@ fun RecipeListScreen(
                             // Navigate to the RecipeDetailScreen and pass the recipeId
                             //it.id?.let { id ->
                             navController.navigate("${Screen.RecipeDetail.name}/${it.id/*id*/}") //it is recipe, /*recipe_detail*/
-                        }//}
+                        }
                 )
             }
         }
@@ -126,19 +127,15 @@ fun RecipeListAndDetail(
     //State to keep track of the selected recipe
     //var selectedRecipe by remember { mutableStateOf<Recipe?>(null) }
 
-    //testing, ok to remove
-    //val recipeUiState by recipeViewModel.uiState.collectAsState() //observe UI state, declared in RecipeExplorerApp.kt
 
-    // Check if we need to select a recipe initially (if none is selected)
+
+//    // Check if we need to select a recipe initially (if none is selected)
     if (selectedRecipe == null) {
         val firstRecipe = recipeList.firstOrNull()  // Pick the first recipe or handle case if empty
         firstRecipe?.let {
             recipeViewModel.selectRecipe(it)  // Select the first recipe initially
         }
     }
-    // If the recipe list is empty, don't select anything, and show a message instead
-    //val isRecipeListEmpty = recipeList.isEmpty()
-
 
     Row(
         modifier = Modifier,
@@ -153,9 +150,12 @@ fun RecipeListAndDetail(
                     .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
             ) {
+                // Create a list without the first item for display
+                val displayList = recipeList.drop(1)
+
                 //items() method is how you add items to the LazyColumn.
                 //for each recipe in the list, call the RecipeCard() composable.
-                items(/*recipeUiState.recipes*/recipeList) { it -> //{ it is recipe on the list
+                items(/*recipeUiState.recipes*//*recipeList*/displayList) { it -> //{ it is recipe on the list
                     RecipeCard(
                         navController = navController,
                         recipe = it, //recipe
@@ -189,8 +189,7 @@ fun RecipeListAndDetail(
 //                    color = MaterialTheme.colorScheme.onBackground
 //                )
 //            } else {
-//                // If a recipe is selected, show the detail of the selected recipe
-
+                //When a recipe is selected, show the RecipeDetailScreen for that recipe.
                 selectedRecipe?.let { recipe ->
                     RecipeDetailScreen(
                         recipeId = selectedRecipe.id, //recipeId, //Get recipe ID as a parameter.
@@ -201,7 +200,7 @@ fun RecipeListAndDetail(
                         modifier = modifier
                     )
                 } ?: run {
-                    //When no recipe is selected
+                    //When no recipe is selected, (working on this)
                     RecipeDetailScreen(
                         recipeId = null,//0, //recipeId, //Get recipe ID as a parameter.
                         recipeViewModel = recipeViewModel,
@@ -274,9 +273,6 @@ fun RecipeListAndDetail(
         val currentRoute = backStackEntry?.destination?.route
 
 
-
-
-
         //NavHost() composable needs the navController
         //NavHost takes a navController to listen to changes and commands from the navController.
         if (contentType == RecipeExplorerContentType.LIST_AND_DETAIL) {
@@ -291,28 +287,12 @@ fun RecipeListAndDetail(
             )
         } else {   //for Compact screens, Uses Navigation.
 
-//        // Dynamically determine the startDestination based on whether a recipe is selected
-//        val startDestination = if (selectedRecipe != null) {
-//            // If a recipe is selected, navigate to the RecipeDetailScreen
-//            "${Screen.RecipeDetail.name}/{recipeId}"
-//        } else {
-//            // If no recipe is selected, show the RecipeListScreen
-//            Screen.RecipeList.name
-//        }
-
-
-//            // Dynamically determine the start destination based on the selected recipe
-//            var startDestination = if (selectedRecipe != null) {
-//                "${Screen.RecipeDetail.name}/{recipeId}"
-//            } else {
-//                Screen.RecipeList.name
-//            }
-            // Set the starting destination to RecipeDetailScreen, with a default recipeId (e.g., 0)
+            // Dynamically determine the startDestination
             val startDestination = if (selectedRecipe == null) {
-                // Use the recipeId of the selected recipe as the starting destination
+                // If no recipe is selected start at RecipeListScreen
                 Screen.RecipeList.name
             } else {
-                // Default to the first recipe's ID if no recipe is selected, or use 0 if no recipes are available
+                // If a recipe is selected start at RecipeDetailScreen
                 "${Screen.RecipeDetail.name}/${selectedRecipe.id}"
             }
             NavHost(

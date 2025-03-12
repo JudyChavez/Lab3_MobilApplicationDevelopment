@@ -33,9 +33,7 @@ import com.example.recipeexplorer.R
 import com.example.recipeexplorer.data.Datasource
 import com.example.recipeexplorer.model.Recipe
 
-
 //RecipeDetailScreen() – Displays detailed information about a selected recipe.
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,14 +95,17 @@ fun RecipeDetailScreen(
     //structure layout
     Scaffold(
         topBar = {
-            if (/*recipe*/selectedRecipe != null) {
+            if (recipeViewModel.selectedRecipe?.id == 0) {
                 RecipeDetailScreenTopAppBar(
-                    topBarTitle = stringResource(id = /*recipe*/selectedRecipe.title)//LocalContext.current.getString(recipe.title)  //stringResource(id = R.string.recipe_detail_screen_top_app_bar)
+                    topBarTitle = "Recipe Detail")
+            } else if (/*recipe*/selectedRecipe != null) {
+                RecipeDetailScreenTopAppBar(
+                    topBarTitle = stringResource(id = /*recipe*/selectedRecipe.title) //LocalContext.current.getString(recipe.title)  //stringResource(id = R.string.recipe_detail_screen_top_app_bar)
 //                    topBarTitle = stringResource(id = recipe.title)
                 )
             } else {
                 RecipeDetailScreenTopAppBar(
-                    topBarTitle = "Recipe Detail"
+                    topBarTitle = "Recipe Is Null"
                 )
             }
         },
@@ -117,7 +118,7 @@ fun RecipeDetailScreen(
             ) {
                 // Show the recipe detail card
                 /*recipe*/selectedRecipe?.let {   //next line only executes if recipe is not null, otherwise it's skipped. Shorter than using an if statement.
-                    RecipeDetailCard(recipe = it, recipeUiState = recipeUiState)
+                    RecipeDetailCard(recipe = it, recipeUiState = recipeUiState, recipeViewModel = recipeViewModel)
                 }
                 if (/*recipe*/selectedRecipe == null) {
                     RecipeDetailCard(
@@ -128,6 +129,7 @@ fun RecipeDetailScreen(
                                 description = stringResource(R.string.recipe_description_null).toInt()
                             ),
                         recipeUiState = recipeUiState,
+                        recipeViewModel = recipeViewModel
                     )
                     //Text(text = "Select a recipe!!!")
                 }
@@ -141,17 +143,26 @@ fun RecipeDetailScreen(
 fun RecipeDetailCard(
     recipe: Recipe,
     recipeUiState: RecipeUiState,
+    recipeViewModel: RecipeViewModel,
     modifier: Modifier = Modifier
 ) {
     // Display recipe details in a card
-    Card(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
+//    Card(modifier = modifier.fillMaxWidth()) {
+//        Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
+
+    if (recipeViewModel.selectedRecipe?.id == 0) {
             //Recipe description
-              Text(
-                   text = stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
-                   style = MaterialTheme.typography.bodyLarge
-              )
-        }
+        Text(
+            text = "Select a recipe!!!",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    } else {
+        Text(
+            text = stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
+
+//}}
 
