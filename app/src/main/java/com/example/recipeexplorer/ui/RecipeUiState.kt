@@ -13,7 +13,9 @@ data class RecipeUiState(
     //val recipeList: List<Recipe>,
 
     val recipes: List<Recipe> = emptyList(), // Default to an empty list
-    val selectedRecipe: Recipe? = null
+    val selectedRecipe: Recipe? = null,
+
+    val isShowingListPage: Boolean = true
 ) {
    // val recipesList = recipeList
 }

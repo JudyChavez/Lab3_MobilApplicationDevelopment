@@ -23,10 +23,6 @@ class RecipeViewModel : ViewModel() {
     val uiState: StateFlow<RecipeUiState> = //asStateFlow() converts MutableStateFlow to a StateFlow.
         _uiState.asStateFlow() // Expose as immutable StateFlow. asStateFlow() makes this mutable state flow a read-only state flow.
 
-
-
-
-
     init {
         initializeUiState() //load recipes
     }
@@ -43,8 +39,6 @@ class RecipeViewModel : ViewModel() {
     private val _selectedRecipe = mutableStateOf<Recipe?>(null)
     val selectedRecipe: Recipe? get() = _selectedRecipe.value
 
-
-
     // Update the selected recipe and reflect the change in the UI state.
     fun updateCurrentRecipeDetailScreenState(recipe: Recipe) {
         _uiState.update {
@@ -59,6 +53,18 @@ class RecipeViewModel : ViewModel() {
         _selectedRecipe.value = recipe
     }
 
+    fun navigateToListPage() {
+        _uiState.update {
+            it.copy(isShowingListPage = true)
+        }
+    }
+
+
+    fun navigateToDetailPage() {
+        _uiState.update {
+            it.copy(isShowingListPage = false)
+        }
+    }
     //Use mutableStateOf() so that Compose observes this value and sets the initial value to "".
     //Compose observes this value and sets the initial value to "".
     //This will be an observable state that Compose will track for changes.

@@ -1,5 +1,8 @@
 package com.example.recipeexplorer.ui
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -202,7 +205,7 @@ fun RecipeListAndDetail(
                 } ?: run {
                     //When no recipe is selected, (working on this)
                     RecipeDetailScreen(
-                        recipeId = null,//0, //recipeId, //Get recipe ID as a parameter.
+                        recipeId = null,//Datasource().defaultRecipeWhenInitialValueNull.id,//null,//0, //recipeId, //Get recipe ID as a parameter.
                         recipeViewModel = recipeViewModel,
                         navController = navController,
                         recipeUiState = recipeUiState,
@@ -258,6 +261,7 @@ fun RecipeListAndDetail(
         )
     }
 
+    @SuppressLint("ContextCastToActivity")
     @Composable
     fun Navigation(
         navigationType: RecipeExplorerNavigationType,
@@ -303,6 +307,10 @@ fun RecipeListAndDetail(
                 composable(
                     route = Screen.RecipeList.name
                 ) {
+//                    val selectedRecipe = recipeViewModel.selectedRecipe
+//                    if (selectedRecipe != null) {
+//                        recipeViewModel.selectRecipe(null)
+//                    }
                     //val context = LocalContext.current
                     RecipeListScreen(
                         navController = navController,
@@ -318,14 +326,17 @@ fun RecipeListAndDetail(
                     route = "${Screen.RecipeDetail.name}/{recipeId}",//"recipe_detail/{recipeId}",
                     arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
                 ) { backStackEntry ->
-                    val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
 
+                    val recipeId = backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
+                    //val activity = LocalContext.current as Activity
                     RecipeDetailScreen(
                         recipeId = recipeId,
                         navController = navController,
                         recipeViewModel = recipeViewModel,
                         recipeUiState = recipeUiState,
                         windowSize = windowSize,
+                        //selectedRecipe = selectedRecipe,
+                        //onBackPressed = { activity.finish() },
                         modifier = modifier
                     )
                 }

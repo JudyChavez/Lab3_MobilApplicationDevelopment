@@ -51,6 +51,9 @@ fun RecipeExplorerApp(
     val navigationType: RecipeExplorerNavigationType    //located in WindowStateUtils.kt
     val contentType: RecipeExplorerContentType  //located in WindowStateUtils.kt
 
+    //val selectedRecipe = RecipeViewModel.selectedRecipe
+    //val selectedRecipe by recipeViewModel.selectedRecipe.collectAsState()
+
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
             navigationType = RecipeExplorerNavigationType.BOTTOM_NAVIGATION

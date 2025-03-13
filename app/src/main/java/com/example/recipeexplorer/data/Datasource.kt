@@ -9,6 +9,19 @@ class Datasource() {
     var recipeIdCounter = 0 //initialize id counter when loading recipes.
 
 
+    // You can define the default recipe here
+    val defaultRecipeWhenInitialValueNull: Recipe = loadRecipes()[0]
+//    //call from composable: Initialize the Datasource and get the default recipe
+//        val datasource = Datasource()
+//        val defaultRecipe = datasource.defaultRecipe
+
+//    // Function to get the default recipe
+//    fun getDefaultRecipe(): Recipe {
+//        return loadRecipes()[0] // Or return a hardcoded Recipe if preferred
+//    } //to call from composable use: Datasource().getDefaultRecipe()
+//    val datasource = Datasource()
+//    val defaultRecipe = datasource.getDefaultRecipe() // Call getDefaultRecipe()
+
     //loadRecipes() method gathers all of the data provided and returns it as a list.
     //uses R.String resource IDs.
     fun loadRecipes(): List<Recipe> {
