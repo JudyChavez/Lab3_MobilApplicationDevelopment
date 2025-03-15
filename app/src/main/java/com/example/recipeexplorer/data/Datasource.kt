@@ -10,7 +10,7 @@ class Datasource() {
 
 
     // You can define the default recipe here
-    val defaultRecipeWhenInitialValueNull: Recipe = loadRecipes()[0]
+    val defaultRecipeWhenInitialValueNull: Recipe? = null//loadRecipes()[0]
 //    //call from composable: Initialize the Datasource and get the default recipe
 //        val datasource = Datasource()
 //        val defaultRecipe = datasource.defaultRecipe
@@ -26,7 +26,7 @@ class Datasource() {
     //uses R.String resource IDs.
     fun loadRecipes(): List<Recipe> {
         return listOf<Recipe>(
-            Recipe(recipeIdCounter++, R.string.recipe_title_null, R.string.recipe_description_null),
+            //Recipe(recipeIdCounter++, R.string.recipe_title_null, R.string.recipe_description_null),
 
             Recipe(recipeIdCounter++, R.string.recipe_title_1, R.string.recipe_description_1),
             Recipe(recipeIdCounter++, R.string.recipe_title_2, R.string.recipe_description_2),

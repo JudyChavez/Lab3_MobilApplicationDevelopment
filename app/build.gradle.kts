@@ -66,6 +66,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx")
     implementation(libs.androidx.media3.datasource)
     implementation(libs.androidx.paging.common.android)
+    implementation(libs.firebase.crashlytics.buildtools)
 
 
 

@@ -32,6 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.recipeexplorer.R
 import com.example.recipeexplorer.data.Datasource
 import com.example.recipeexplorer.model.Recipe
+import com.example.recipeexplorer.ui.utils.RecipeExplorerContentType
+import com.example.recipeexplorer.ui.utils.RecipeExplorerNavigationType
 
 //RecipeDetailScreen() – Displays detailed information about a selected recipe.
 
@@ -60,12 +62,14 @@ fun RecipeDetailScreen(
     navController: NavHostController,
     recipeUiState: RecipeUiState,
     windowSize: WindowWidthSizeClass,
-    //onBackPressed: () -> Unit,
-    //selectedRecipe: selectedRecipe,
+    contentType: RecipeExplorerContentType,
+    onBackPressed: () -> Unit,
+    //selectedRecipe: RecipeViewModel,
     modifier: Modifier = Modifier
 ) {
     //Observe the selected recipe from ViewModel
     val selectedRecipe = recipeViewModel.selectedRecipe
+
 
     // Ensure the state is available even after recomposition
     if (selectedRecipe == null) {
@@ -80,48 +84,40 @@ fun RecipeDetailScreen(
 
     // Handle the back button press
     BackHandler {
-//        // Check if there is a screen to go back to
-//        if (navController.previousBackStackEntry != null) {
-//            // Clear selected recipe before popping the back stack
-//            //recipeViewModel.selectRecipe(null)
-//            // There is a screen to pop back to
-//            //navController.popBackStack()
-//        } else {
-//            recipeViewModel.selectRecipe(null)
-//            // Navigate to the RecipeList screen
-            navController.navigate(Screen.RecipeList.name)
-//            // Clear selected recipe before navigating to RecipeList
-            recipeViewModel.selectRecipe(Datasource().defaultRecipeWhenInitialValueNull)
-
-//        // Clear the selected recipe in the ViewModel before navigating back
-//        recipeViewModel.selectRecipe(null) // or Datasource().defaultRecipeWhenInitialValueNull
-//
-//        // Navigate back to the RecipeList screen
-//        navController.navigate(Screen.RecipeList.name) {
-//            // Ensure that the back stack is cleared so that the user cannot go back to the detail screen
-//            popUpTo(Screen.RecipeList.name) { inclusive = true }
-//
-//        }
+        // Check if there is a screen to go back to
+        if (navController.previousBackStackEntry != null) {
+            // Clear selected recipe before popping the back stack
+            recipeViewModel.selectRecipe(null)
+            // There is a screen to pop back to
+            navController.popBackStack()
+        } else {
+            navController.navigate(Screen.RecipeList.name) //argument passed is the route or destination to navigate to.
+        }
+        //            // Clear selected recipe before navigating to RecipeList
+//        recipeViewModel.selectRecipe(Datasource().defaultRecipeWhenInitialValueNull)
+        //recipeViewModel.selectRecipe(null)
 
     }
 
     //structure layout
     Scaffold(
         topBar = {
-            if (recipeViewModel.selectedRecipe?.id == 0 || recipeViewModel.selectedRecipe == null) {
-                RecipeDetailScreenTopAppBar(
-                    topBarTitle = "Recipe Detail")
-            } else if (/*recipe*/selectedRecipe != null) {
-                RecipeDetailScreenTopAppBar(
-                    topBarTitle = stringResource(id = /*recipe*/selectedRecipe.title) //LocalContext.current.getString(recipe.title)  //stringResource(id = R.string.recipe_detail_screen_top_app_bar)
-//                    topBarTitle = stringResource(id = recipe.title)
-                )
-            } else {
-                RecipeDetailScreenTopAppBar(
-                    topBarTitle = "Recipe Is Null"
-                )
+            when {
+                //when selectedRecipe is null
+                recipeViewModel.selectedRecipe == null -> {
+                    RecipeDetailScreenTopAppBar(topBarTitle = "Recipe Details")
+                }
+                //when selectedRecipe is not null and has a valid title
+                selectedRecipe != null -> {
+                    RecipeDetailScreenTopAppBar(topBarTitle = stringResource(id = /*recipe*/selectedRecipe.title))
+                }
+                //Default case
+                else -> {
+                    RecipeDetailScreenTopAppBar(topBarTitle = "Unexpected!")
+                }
             }
         },
+
         content = { paddingValues ->
             //content below top app bar
             Column(
@@ -129,53 +125,39 @@ fun RecipeDetailScreen(
                     .padding(paddingValues) //to account for top app bar paddingValues
                     .padding(dimensionResource(R.dimen.padding_medium)) //additional padding for content.
             ) {
-                // Show the recipe detail card
-                /*recipe*/selectedRecipe?.let {   //next line only executes if recipe is not null, otherwise it's skipped. Shorter than using an if statement.
-                    RecipeDetailCard(recipe = it, recipeUiState = recipeUiState, recipeViewModel = recipeViewModel)
-                }
-                if (/*recipe*/selectedRecipe == null) {
-                    RecipeDetailCard(
-                        recipe = //null,
-                            Recipe(
-                                id = 0,
-                                title = stringResource(R.string.recipe_title_null).toInt(),
-                                description = stringResource(R.string.recipe_description_null).toInt()
-                            ),
-                        recipeUiState = recipeUiState,
-                        recipeViewModel = recipeViewModel
-                    )
-                    //Text(text = "Select a recipe!!!")
-                }
+                val currentRecipe = recipeViewModel.selectedRecipe
+                RecipeDetailCard(
+                    recipe = currentRecipe,
+                    recipeUiState = recipeUiState,
+                    recipeViewModel = recipeViewModel,
+                    selectedRecipe = selectedRecipe
+                )
             }
         }
     )
 }
 
-//each individual recipe card, it contains: title and description
+//Description for selected recipe.
 @Composable
 fun RecipeDetailCard(
-    recipe: Recipe,
+    recipe: Recipe?,
     recipeUiState: RecipeUiState,
     recipeViewModel: RecipeViewModel,
+    selectedRecipe: Recipe?,
     modifier: Modifier = Modifier
 ) {
-    // Display recipe details in a card
-//    Card(modifier = modifier.fillMaxWidth()) {
-//        Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
-
-    if (recipeViewModel.selectedRecipe?.id == 0 || recipeViewModel.selectedRecipe == null) {
-        //Recipe description
+    if (selectedRecipe != null ) {
         Text(
-            text = "Select a recipe!!!",
+            text = stringResource(id = selectedRecipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
             style = MaterialTheme.typography.bodyLarge
         )
     } else {
         Text(
-            text = stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+            text = "Select a Recipe!",//stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
             style = MaterialTheme.typography.bodyLarge
         )
     }
 }
 
-//}}
+
 

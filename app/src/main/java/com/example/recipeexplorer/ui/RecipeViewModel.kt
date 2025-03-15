@@ -31,14 +31,13 @@ class RecipeViewModel : ViewModel() {
     private fun initializeUiState() {
         _uiState.value = _uiState.value.copy(
             recipes = Datasource().loadRecipes(), //update list of recipes UI state //returns a listOf<Recipe>
-            selectedRecipe = null
+            selectedRecipe = null //initializes selectedRecipe as null
         )
     }
 
-    //Holds the currently selected recipe
+//    //Holds the currently selected recipe
     private val _selectedRecipe = mutableStateOf<Recipe?>(null)
     val selectedRecipe: Recipe? get() = _selectedRecipe.value
-
     // Update the selected recipe and reflect the change in the UI state.
     fun updateCurrentRecipeDetailScreenState(recipe: Recipe) {
         _uiState.update {
@@ -52,6 +51,9 @@ class RecipeViewModel : ViewModel() {
     fun selectRecipe(recipe: Recipe?) {
         _selectedRecipe.value = recipe
     }
+//    fun selectRecipe(recipe: Recipe?) {
+//        _uiState.update { it.copy(selectedRecipe = recipe) }
+//    }
 
     fun navigateToListPage() {
         _uiState.update {

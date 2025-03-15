@@ -32,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipeexplorer.R
 import com.example.recipeexplorer.data.Datasource
+import com.example.recipeexplorer.model.Recipe
 import com.example.recipeexplorer.ui.utils.RecipeExplorerNavigationType
 
 import com.example.recipeexplorer.ui.utils.RecipeExplorerContentType
@@ -52,7 +53,8 @@ fun RecipeExplorerApp(
     val contentType: RecipeExplorerContentType  //located in WindowStateUtils.kt
 
     //val selectedRecipe = RecipeViewModel.selectedRecipe
-    //val selectedRecipe by recipeViewModel.selectedRecipe.collectAsState()
+    //val selectedRecipe by recipeViewModel.uiState.collectAsState().getValue(recipeViewModel.selecteRecipe())
+    //val selectedRecipe: Recipe? = recipeViewModel.selectedRecipe
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -86,6 +88,7 @@ fun RecipeExplorerApp(
         recipeViewModel = recipeViewModel,
         windowSize = windowSize,
         navController = navController, //pass the NavController to Navigation
+        //selectedRecipe = selectedRecipe,
         modifier = modifier
     )
 }
