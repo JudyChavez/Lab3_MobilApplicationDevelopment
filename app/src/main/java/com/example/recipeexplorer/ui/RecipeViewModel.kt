@@ -35,7 +35,22 @@ class RecipeViewModel : ViewModel() {
         )
     }
 
-//    //Holds the currently selected recipe
+//    // Updates the selected recipe in the UI state and reflects the change
+//    fun selectRecipe(recipe: Recipe?) {
+//        _uiState.update {
+//            it.copy(selectedRecipe = recipe) // Update the selected recipe in the state
+//        }
+//    }
+
+
+
+
+
+
+
+
+
+    //Holds the currently selected recipe
     private val _selectedRecipe = mutableStateOf<Recipe?>(null)
     val selectedRecipe: Recipe? get() = _selectedRecipe.value
     // Update the selected recipe and reflect the change in the UI state.
@@ -55,6 +70,26 @@ class RecipeViewModel : ViewModel() {
 //        _uiState.update { it.copy(selectedRecipe = recipe) }
 //    }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   /*
     fun navigateToListPage() {
         _uiState.update {
             it.copy(isShowingListPage = true)
@@ -67,6 +102,8 @@ class RecipeViewModel : ViewModel() {
             it.copy(isShowingListPage = false)
         }
     }
+    */
+
     //Use mutableStateOf() so that Compose observes this value and sets the initial value to "".
     //Compose observes this value and sets the initial value to "".
     //This will be an observable state that Compose will track for changes.

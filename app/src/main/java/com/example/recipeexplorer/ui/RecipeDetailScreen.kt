@@ -83,6 +83,26 @@ fun RecipeDetailScreen(
     val recipeO = recipeViewModel.uiState.collectAsState().value.recipes.find {it.id == 0/*recipeId*/ }
 
     // Handle the back button press
+//    BackHandler {
+////        // Check if there is a screen to go back to
+////        if (navController.previousBackStackEntry != null) {
+////            // Clear selected recipe before popping the back stack
+////            recipeViewModel.selectRecipe(null)
+////            // There is a screen to pop back to
+////            navController.popBackStack()
+////        } else {
+////            navController.navigate(Screen.RecipeList.name) //argument passed is the route or destination to navigate to.
+////        }
+////        //            // Clear selected recipe before navigating to RecipeList
+//////        recipeViewModel.selectRecipe(Datasource().defaultRecipeWhenInitialValueNull)
+//        recipeViewModel.selectRecipe(null)
+//        // Reset the selected recipe to null when the back button is pressed
+//        //recipeViewModel.selectRecipe(null)
+//        navController.navigate(Screen.RecipeList.name)
+//        // Navigate to the previous screen or a specific screen (e.g., RecipeList)
+//        navController.popBackStack()
+//    }
+    // Handle the back button press
     BackHandler {
         // Check if there is a screen to go back to
         if (navController.previousBackStackEntry != null) {
@@ -98,6 +118,8 @@ fun RecipeDetailScreen(
         //recipeViewModel.selectRecipe(null)
 
     }
+
+
 
     //structure layout
     Scaffold(
@@ -125,9 +147,9 @@ fun RecipeDetailScreen(
                     .padding(paddingValues) //to account for top app bar paddingValues
                     .padding(dimensionResource(R.dimen.padding_medium)) //additional padding for content.
             ) {
-                val currentRecipe = recipeViewModel.selectedRecipe
+                //val currentRecipe = recipeViewModel.selectedRecipe
                 RecipeDetailCard(
-                    recipe = currentRecipe,
+                    recipe = selectedRecipe,//currentRecipe,
                     recipeUiState = recipeUiState,
                     recipeViewModel = recipeViewModel,
                     selectedRecipe = selectedRecipe
@@ -146,14 +168,14 @@ fun RecipeDetailCard(
     selectedRecipe: Recipe?,
     modifier: Modifier = Modifier
 ) {
-    if (selectedRecipe != null ) {
+    if (selectedRecipe == null ) {
         Text(
-            text = stringResource(id = selectedRecipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+            text = "Select a Recipe!",//stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
             style = MaterialTheme.typography.bodyLarge
         )
     } else {
         Text(
-            text = "Select a Recipe!",//stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+            text = stringResource(id = selectedRecipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
             style = MaterialTheme.typography.bodyLarge
         )
     }

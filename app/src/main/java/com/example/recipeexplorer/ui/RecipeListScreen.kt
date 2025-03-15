@@ -302,10 +302,6 @@ fun RecipeListAndDetail(
                 composable(
                     route = Screen.RecipeList.name
                 ) {
-//                    val selectedRecipe = recipeViewModel.selectedRecipe
-//                    if (selectedRecipe != null) {
-//                        recipeViewModel.selectRecipe(null)
-//                    }
                     //val context = LocalContext.current
                     RecipeListScreen(
                         navController = navController,
