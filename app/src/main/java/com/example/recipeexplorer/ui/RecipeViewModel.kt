@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.State
+
 
 //RecipeViewModel class will manage the state of the UI by holding and updating the RecipeUiState through the _uiState variable.
 //manages state of recipes list and selectedRecipe.
@@ -45,7 +48,14 @@ class RecipeViewModel : ViewModel() {
     }
 
 
+    // State to store the scroll position
+    private val _scrollPosition = mutableStateOf(0)
+    val scrollPosition: State<Int> = _scrollPosition
 
+    // Function to update the scroll position
+    fun updateScrollPosition(position: Int) {
+        _scrollPosition.value = position
+    }
 
 
 

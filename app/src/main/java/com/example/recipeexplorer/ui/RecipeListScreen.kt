@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -79,13 +81,26 @@ fun RecipeListScreen(
     selectedRecipe: Recipe?,
     modifier: Modifier = Modifier
 ) {
+    // Retrieve the scroll position from the ViewModel
+    val scrollPosition = recipeViewModel.scrollPosition.value
+    val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = scrollPosition)
+    //Save the scroll position when the user scrolls
+    LaunchedEffect(scrollState.firstVisibleItemIndex) {
+        recipeViewModel.updateScrollPosition(scrollState.firstVisibleItemIndex) //saves the scroll position when the user scrolls.
+    }
+
     Scaffold(
         topBar = {
             RecipeListScreenTopAppBar()
         }
     ) { it -> //"it" is paddingValues { paddingValues ->
+        // Remember the scroll state to retain the scroll position
+
         val displayList = recipeUiState.recipes//.drop(1)
-        LazyColumn(contentPadding = it) {
+        LazyColumn(
+            state = scrollState,
+            contentPadding = it
+        ) {
             //items() method is how you add items to the LazyColumn.
             //for each recipe in the list, call the RecipeCard() composable.
             items(displayList) { it -> //{ it is recipe { recipe ->
@@ -122,6 +137,14 @@ fun RecipeListAndDetail(
 ) {
     val recipeList = recipeUiState.recipes//Datasource().loadRecipes()
 
+    // Retrieve the scroll position from the ViewModel
+    val scrollPosition = recipeViewModel.scrollPosition.value
+    val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = scrollPosition)
+    //Save the scroll position when the user scrolls
+    LaunchedEffect(scrollState.firstVisibleItemIndex) {
+        recipeViewModel.updateScrollPosition(scrollState.firstVisibleItemIndex) //saves the scroll position when the user scrolls.
+    }
+
 
     //Use selectedRecipe from the RecipeViewModel
     //val selectedRecipe = recipeViewModel.selectedRecipe //directly from RecipeViewModel
@@ -129,18 +152,20 @@ fun RecipeListAndDetail(
     //State to keep track of the selected recipe
     //val selectedRecipe by remember { mutableStateOf<Recipe?>(null) }
 
-    val recipeId =
-        selectedRecipe//0//null//backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
-    // find recipe with given recipeId
-    val recipe = Datasource().loadRecipes().find { it.id == recipeUiState.selectedRecipe?.id }
+//    val recipeId =
+//        selectedRecipe//0//null//backStackEntry.arguments?.getString("recipeId")?.toInt() ?: 0
+//    // find recipe with given recipeId
+//    val recipe = Datasource().loadRecipes().find { it.id == recipeUiState.selectedRecipe?.id }
 
     Row(
         modifier = Modifier,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
+        //RecipeListScreen made up of RecipeCard()s, on the left
         Column(modifier = Modifier.weight(1f)) {
             RecipeListScreenTopAppBar()
             LazyColumn(
+                state = scrollState,
                 contentPadding = WindowInsets.statusBars.asPaddingValues(),
                 modifier = Modifier
                     .weight(1f)
