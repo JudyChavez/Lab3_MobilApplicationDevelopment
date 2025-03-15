@@ -68,7 +68,8 @@ fun RecipeDetailScreen(
     modifier: Modifier = Modifier
 ) {
     //Observe the selected recipe from ViewModel
-    val selectedRecipe = recipeViewModel.selectedRecipe
+    /*val selectedRecipe = recipeViewModel.selectedRecipe*/val selectedRecipe = recipeUiState.selectedRecipe
+
 
 
     // Ensure the state is available even after recomposition
@@ -83,50 +84,24 @@ fun RecipeDetailScreen(
     val recipeO = recipeViewModel.uiState.collectAsState().value.recipes.find {it.id == 0/*recipeId*/ }
 
     // Handle the back button press
-//    BackHandler {
-////        // Check if there is a screen to go back to
-////        if (navController.previousBackStackEntry != null) {
-////            // Clear selected recipe before popping the back stack
-////            recipeViewModel.selectRecipe(null)
-////            // There is a screen to pop back to
-////            navController.popBackStack()
-////        } else {
-////            navController.navigate(Screen.RecipeList.name) //argument passed is the route or destination to navigate to.
-////        }
-////        //            // Clear selected recipe before navigating to RecipeList
-//////        recipeViewModel.selectRecipe(Datasource().defaultRecipeWhenInitialValueNull)
-//        recipeViewModel.selectRecipe(null)
-//        // Reset the selected recipe to null when the back button is pressed
-//        //recipeViewModel.selectRecipe(null)
-//        navController.navigate(Screen.RecipeList.name)
-//        // Navigate to the previous screen or a specific screen (e.g., RecipeList)
-//        navController.popBackStack()
-//    }
-    // Handle the back button press
     BackHandler {
-        // Check if there is a screen to go back to
+        // Clear the selected recipe before navigating back
+        recipeViewModel.selectRecipe(null)
+
+        // Then, handle the navigation back
         if (navController.previousBackStackEntry != null) {
-            // Clear selected recipe before popping the back stack
-            recipeViewModel.selectRecipe(null)
-            // There is a screen to pop back to
             navController.popBackStack()
         } else {
-            navController.navigate(Screen.RecipeList.name) //argument passed is the route or destination to navigate to.
+            navController.navigate(Screen.RecipeList.name) // Navigate to the list if no back stack
         }
-        //            // Clear selected recipe before navigating to RecipeList
-//        recipeViewModel.selectRecipe(Datasource().defaultRecipeWhenInitialValueNull)
-        //recipeViewModel.selectRecipe(null)
-
     }
-
-
 
     //structure layout
     Scaffold(
         topBar = {
             when {
                 //when selectedRecipe is null
-                recipeViewModel.selectedRecipe == null -> {
+                /*recipeViewModel.selectedRecipe == null -> {*/recipeUiState.selectedRecipe == null -> {
                     RecipeDetailScreenTopAppBar(topBarTitle = "Recipe Details")
                 }
                 //when selectedRecipe is not null and has a valid title

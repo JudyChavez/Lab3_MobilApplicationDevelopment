@@ -35,12 +35,14 @@ class RecipeViewModel : ViewModel() {
         )
     }
 
-//    // Updates the selected recipe in the UI state and reflects the change
-//    fun selectRecipe(recipe: Recipe?) {
-//        _uiState.update {
-//            it.copy(selectedRecipe = recipe) // Update the selected recipe in the state
-//        }
-//    }
+
+
+    // Updates the selected recipe in the UI state and reflects the change
+    fun selectRecipe(recipe: Recipe?) {
+        _uiState.update {
+            it.copy(selectedRecipe = recipe) // Update the selected recipe in the state
+        }
+    }
 
 
 
@@ -49,7 +51,7 @@ class RecipeViewModel : ViewModel() {
 
 
 
-
+/*
     //Holds the currently selected recipe
     private val _selectedRecipe = mutableStateOf<Recipe?>(null)
     val selectedRecipe: Recipe? get() = _selectedRecipe.value
@@ -69,7 +71,7 @@ class RecipeViewModel : ViewModel() {
 //    fun selectRecipe(recipe: Recipe?) {
 //        _uiState.update { it.copy(selectedRecipe = recipe) }
 //    }
-
+*/
 
 
 

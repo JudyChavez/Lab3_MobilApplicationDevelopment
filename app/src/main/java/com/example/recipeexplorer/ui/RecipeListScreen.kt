@@ -177,7 +177,7 @@ fun RecipeListAndDetail(
                 ),
             verticalArrangement = Arrangement.Center
         ) {
-            val currentRecipe = recipeViewModel.selectedRecipe
+            /*val currentRecipe = recipeViewModel.selectedRecipe*/val currentRecipe = recipeUiState.selectedRecipe
             if (currentRecipe == null) {
                 RecipeDetailScreen(
                     recipeId = null,//null, //recipeId, //Get recipe ID as a parameter.
@@ -262,7 +262,7 @@ fun RecipeListAndDetail(
         navController: NavHostController,
         modifier: Modifier = Modifier
     ) {
-        val selectedRecipe = recipeViewModel.selectedRecipe
+        /*val selectedRecipe = recipeViewModel.selectedRecipe*/val selectedRecipe = recipeUiState.selectedRecipe
         val selectedRecipeUi = recipeUiState.selectedRecipe
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route

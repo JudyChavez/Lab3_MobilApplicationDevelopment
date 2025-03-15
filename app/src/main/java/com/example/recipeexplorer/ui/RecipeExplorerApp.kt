@@ -84,7 +84,7 @@ fun RecipeExplorerApp(
     Navigation(
         navigationType = navigationType,
         contentType = contentType,
-        recipeUiState = recipeUiState,
+        recipeUiState = recipeUiState, //State containing recipes and selectedRecipe
         recipeViewModel = recipeViewModel,
         windowSize = windowSize,
         navController = navController, //pass the NavController to Navigation
