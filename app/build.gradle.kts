@@ -52,7 +52,7 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")//This dependency is used for adding the lifecycle aware viewmodel to your compose app.
 
-    implementation("androidx.navigation:navigation-compose:2.8.8") //dependency for naviagation.
+    implementation("androidx.navigation:navigation-compose:2.8.8") //dependency for navigation.
 
     implementation ("androidx.compose.foundation:foundation:1.4.0")
 

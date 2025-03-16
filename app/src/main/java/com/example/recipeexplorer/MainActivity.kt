@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                         .padding(
                             //The WindowInsets API helps manage system UI elements
                             // like the status bar, navigation bar, etc.
-                            // The code here ensures that the app adjusts its padding based on safe areas (i.e., regions not covered by system UI elements).
+                            // The code here ensures that the app adjusts its padding based on safe areas.
                             start = WindowInsets.safeDrawing.asPaddingValues()
                                 .calculateStartPadding(layoutDirection),
                             end = WindowInsets.safeDrawing.asPaddingValues()

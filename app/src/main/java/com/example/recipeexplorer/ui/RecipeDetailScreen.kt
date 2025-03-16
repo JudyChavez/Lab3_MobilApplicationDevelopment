@@ -4,11 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -16,24 +12,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.getString
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.recipeexplorer.R
 import com.example.recipeexplorer.data.Datasource
 import com.example.recipeexplorer.model.Recipe
 import com.example.recipeexplorer.ui.utils.RecipeExplorerContentType
-import com.example.recipeexplorer.ui.utils.RecipeExplorerNavigationType
 
 //RecipeDetailScreen() – Displays detailed information about a selected recipe.
 
@@ -58,7 +45,7 @@ fun RecipeDetailScreenTopAppBar(topBarTitle: String, modifier: Modifier = Modifi
 @Composable
 fun RecipeDetailScreen(
     @StringRes recipeId: Int?, //Get recipe ID as a parameter.
-    recipeViewModel: RecipeViewModel, // = viewModel(),
+    recipeViewModel: RecipeViewModel,
     navController: NavHostController,
     recipeUiState: RecipeUiState,
     windowSize: WindowWidthSizeClass,
@@ -81,8 +68,6 @@ fun RecipeDetailScreen(
         }
     }
 
-    val recipeO = recipeViewModel.uiState.collectAsState().value.recipes.find {it.id == 0/*recipeId*/ }
-
     // Handle the back button press
     BackHandler {
         // Clear the selected recipe before navigating back
@@ -101,12 +86,12 @@ fun RecipeDetailScreen(
         topBar = {
             when {
                 //when selectedRecipe is null
-                /*recipeViewModel.selectedRecipe == null -> {*/recipeUiState.selectedRecipe == null -> {
+                recipeUiState.selectedRecipe == null -> {
                     RecipeDetailScreenTopAppBar(topBarTitle = "Recipe Details")
                 }
                 //when selectedRecipe is not null and has a valid title
                 selectedRecipe != null -> {
-                    RecipeDetailScreenTopAppBar(topBarTitle = stringResource(id = /*recipe*/selectedRecipe.title))
+                    RecipeDetailScreenTopAppBar(topBarTitle = stringResource(id = selectedRecipe.title))
                 }
                 //Default case
                 else -> {
@@ -122,7 +107,6 @@ fun RecipeDetailScreen(
                     .padding(paddingValues) //to account for top app bar paddingValues
                     .padding(dimensionResource(R.dimen.padding_medium)) //additional padding for content.
             ) {
-                //val currentRecipe = recipeViewModel.selectedRecipe
                 RecipeDetailCard(
                     recipe = selectedRecipe,//currentRecipe,
                     recipeUiState = recipeUiState,
@@ -145,12 +129,12 @@ fun RecipeDetailCard(
 ) {
     if (selectedRecipe == null ) {
         Text(
-            text = "Select a Recipe!",//stringResource(id = recipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+            text = "Select a Recipe!",
             style = MaterialTheme.typography.bodyLarge
         )
     } else {
         Text(
-            text = stringResource(id = selectedRecipe.description),//LocalContext.current.getString(recipe.description), //LocalContext.current This retrieves the current context (e.g., the current Activity or Context within your composable).
+            text = stringResource(id = selectedRecipe.description),
             style = MaterialTheme.typography.bodyLarge
         )
     }
